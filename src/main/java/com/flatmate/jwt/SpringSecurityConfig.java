@@ -72,7 +72,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
         httpSecurity.cors();
         httpSecurity.csrf().disable().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-                .antMatchers("/api/auth/login", "/api/auth/register")
+                .antMatchers("/api/auth/login", "/api/auth/register","/api/flat/register")
                 .permitAll()
                 .antMatchers("/swagger-ui/**", "/v3/api-docs/**")
                 .permitAll()

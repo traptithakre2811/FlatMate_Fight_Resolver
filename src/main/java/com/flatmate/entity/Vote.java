@@ -1,16 +1,15 @@
 package com.flatmate.entity;
 
 import com.flatmate.enums.VoteType;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @Table(name = "votes")
 public class Vote {
 

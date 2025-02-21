@@ -91,7 +91,7 @@ public class VotingServiceImpl implements VotingService {
         trendingVoteResponseDto.setResolved(complaint.isResolve());
         trendingVoteResponseDto.setComplaintType(complaint.getComplaintType());
         trendingVoteResponseDto.setDescription(complaint.getDescription());
-        trendingVoteResponseDto.setId(complaint.getId());
+        trendingVoteResponseDto.setId(complaint.getComplaintId());
         trendingVoteResponseDto.setSeverityLevel(complaint.getSeverityLevel());
         return trendingVoteResponseDto;
     }

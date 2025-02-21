@@ -8,4 +8,6 @@ public interface ComplaintService {
     public ResponseEntity<?> complaintResolved(Long complaintUserId , Long againstUserId );
 
     public ResponseEntity<?> getAllActiveComplaint();
+
+
 }

@@ -15,7 +15,7 @@ import java.util.Optional;
 @Repository
 public interface ComplaintRepo extends JpaRepository<Complaint,Long> {
 
-    public Optional<Complaint> findByIdAndUser_Id(Long complainerUserId,Long complaintId);
+    public Optional<Complaint> findByComplaintIdAndUser_Id(Long complainerUserId,Long complaintId);
 
     public List<Complaint> findByResolveFalse();
 
@@ -26,4 +26,7 @@ public interface ComplaintRepo extends JpaRepository<Complaint,Long> {
 
     @Query("SELECT c FROM Complaint c WHERE c.user.flat.id = :flatId")
     List<Complaint> findByFlatId(@Param("flatId") Long flatId);
+
+ /*   @Query("SELECT c FROM Complaint c WHERE c.user.flat.id = :flatId")
+    List<Complaint> findComplaintsByFlat(@Param("flatId") Long flatId);*/
 }

@@ -1,14 +1,13 @@
 package com.flatmate.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Flat {
@@ -19,6 +18,6 @@ public class Flat {
     @Column(nullable = false, unique = true)
     private String flatCode;
 
-    @OneToMany(mappedBy = "flat", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "flat", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<User> users;
 }

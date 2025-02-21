@@ -1,10 +1,9 @@
 package com.flatmate.entity;
 
 import com.flatmate.enums.ComplaintType;
+import com.flatmate.enums.PunishmentType;
 import com.flatmate.enums.SeverityLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -14,11 +13,12 @@ import java.util.List;
 @Table(name = "complaints")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 public class Complaint {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long complaintId;
 
     @Column(nullable = false)
     private String title;
@@ -38,6 +38,7 @@ public class Complaint {
     private LocalDateTime createdAt;
 
     private boolean resolve;
+    private PunishmentType punishment;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

@@ -4,7 +4,7 @@ import com.flatmate.dto.ComplaintRequestDto;
 import com.flatmate.dto.ComplaintResponseDto;
 import com.flatmate.entity.Complaint;
 import com.flatmate.entity.User;
-import com.flatmate.exceptionhandler.customeexception.CommonException;
+import com.flatmate.enums.SeverityLevel;
 import com.flatmate.exceptionhandler.customeexception.NotFoundException;
 import com.flatmate.exceptionhandler.customeexception.WrongInputException;
 import com.flatmate.repository.ComplaintRepo;
@@ -13,9 +13,6 @@ import com.flatmate.response.CommonResponse;
 import com.flatmate.service.ComplaintService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -47,10 +44,11 @@ public class ComplaintServiceImpl implements ComplaintService {
         if (!complaintUser.get().getFlat().getFlatCode().equals(againstUser.get().getFlat().getFlatCode())) {
             throw new WrongInputException(400, "flatmate is wrong");
         }
-        if (complaintUser.get().getId() == againstUser.get().getId()) {
+        if (complaintUser.get().getComplaints() == againstUser.get().getComplaints()) {
             throw new WrongInputException(400, "your not file complaint against self");
         }
         Complaint complaint = modelMapper.map(complaintRequestDto, Complaint.class);
+        complaint.setComplaintId(null);
         complaint.setUser(complaintUser.get());
         complaint.setAgainstUser(againstUser.get());
         complaint.setCreatedAt(LocalDateTime.now());
@@ -64,15 +62,34 @@ public class ComplaintServiceImpl implements ComplaintService {
 
     @Override
     public ResponseEntity<?> complaintResolved(Long complaintUserId, Long complaintId) {
-        Optional<Complaint> byUserAndAgainstUser = complaintRepo.findByIdAndUser_Id(complaintId, complaintUserId);
-        if (!byUserAndAgainstUser.isPresent()) {
+        Optional<Complaint> complaintByUser = complaintRepo.findByComplaintIdAndUser_Id(complaintId, complaintUserId);
+        if (!complaintByUser.isPresent()) {
             throw new NotFoundException(404, "complaint or user does not exist");
         }
-        Complaint complaint = byUserAndAgainstUser.get();
+        Complaint complaint = complaintByUser.get();
         complaint.setResolve(true);
         Complaint complaintResolve = complaintRepo.save(complaint);
+        int karmaPoint = calculateKarmaPoints(complaint.getSeverityLevel());
+        User user = complaint.getUser();
+        user.setKarmaPoints(user.getKarmaPoints()+karmaPoint);
+        userRepo.save(user);
         ComplaintResponseDto complaintResponseDto = modelMapper.map(complaintResolve, ComplaintResponseDto.class);
         return ResponseEntity.ok(new CommonResponse("Complaint resolve successfully", 200, complaintResponseDto));
+    }
+    private int calculateKarmaPoints(SeverityLevel severityLevel) {
+        // Define karma points based on severity level
+        switch (severityLevel) {
+            case MINOR:
+                return 5;
+            case ANNOYING:
+                return 10;
+            case MAJOR:
+                return 15;
+            case NUCLEAR:
+                return 20;
+            default:
+                return 0;
+        }
     }
 
     @Override
@@ -80,7 +97,7 @@ public class ComplaintServiceImpl implements ComplaintService {
         List<Complaint> activeComplaints = complaintRepo.findByResolveFalse();
         List<ComplaintResponseDto> responseDto = activeComplaints.stream()
                 .map(complaint -> modelMapper.map(complaint, ComplaintResponseDto.class)).collect(Collectors.toList());
-           return ResponseEntity.ok(new CommonResponse("Get all active complaits list",200,responseDto));
+        return ResponseEntity.ok(new CommonResponse("Get all active complaits list", 200, responseDto));
     }
 
 

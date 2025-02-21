@@ -5,5 +5,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface FlatService {
 
-    ResponseEntity<?> registerFlat(FlatRequestDto requestDto);
+   public ResponseEntity<?> registerFlat(FlatRequestDto requestDto);
+
+    public ResponseEntity<?> getFlatStats(Long userId);
 }

@@ -1,8 +1,7 @@
 package com.flatmate.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.flatmate.enums.PunishmentType;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -11,7 +10,8 @@ import java.util.List;
 @Table(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,11 +25,13 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "flat_id", nullable = false)
     private Flat flat;
 
     private int karmaPoints = 0;
+
+    private String badge;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Complaint> complaints;

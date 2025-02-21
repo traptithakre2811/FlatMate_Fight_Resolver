@@ -10,4 +10,7 @@ public ResponseEntity<?> registerFlatmate(UserRequestDto userRequestDto);
 
 public ResponseEntity<?> login(LoginReqDto loginReqDto);
 
+public ResponseEntity<?> getBestFLatMate(Long flatId);
+
+public ResponseEntity<?> showKarmaPointRanking(Long flatId);
 }

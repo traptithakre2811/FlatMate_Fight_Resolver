@@ -17,6 +17,7 @@ public class ComplaintController {
 
     @PostMapping(name = "REGISTER_COMPLAINT", value = "/filed")
     public ResponseEntity<?> registerComplaint(ComplaintRequestDto complaintRequestDto) {
+
         return complaintService.registerComplaint(complaintRequestDto);
     }
 
